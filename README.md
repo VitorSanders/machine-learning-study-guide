@@ -17,7 +17,7 @@ This guide is written for absolute beginners—whether you're completely new to 
 
 ## 🧩 Module Overview
 
-### Module 0 – Setup & Tools 🛠️
+### [Module 0 – Setup & Tools 🛠️](modules/module0.md)
 **What you’ll learn:**
 - Installing Python 3 & package manager (pip)
 - Choosing and configuring an IDE/text editor (VS Code recommended)
@@ -29,7 +29,7 @@ This guide is written for absolute beginners—whether you're completely new to 
 
 ---
 
-### Module 1 – Computer Science Fundamentals 💻
+### [Module 1 – Computer Science Fundamentals 💻](modules/module1.md)
 **What you’ll learn:**
 - What a computer actually does (binary, CPU, memory)
 - Basic data types (numbers, strings, lists) and how computers store them
