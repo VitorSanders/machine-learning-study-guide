@@ -167,6 +167,41 @@ print(all_titles[:5])
 
 The important idea: the function does a job (loading titles) and the rest of your program can call it without worrying how it works.
 
+### 1.4.2 Obtaining the IMDB data
+The examples and exercises in this module refer to a slice of the **IMDB movie dataset**.  You don’t need the full database – just a tiny excerpt will do – but it’s helpful to know where it comes from and how to work with it.
+
+**Where to get it:**
+- Create your own sample file by hand (5–10 rows) with columns like `title,year,rating`.  This is the easiest way to get started.
+- Download the official files from the Internet Movie Database [datasets page](https://datasets.imdbws.com/).  The files are published as tab‑separated values (TSV) and are quite large (hundreds of megabytes), so grab just one file such as `title.basics.tsv.gz` and unzip it:
+  ```bash
+  curl -O https://datasets.imdbws.com/title.basics.tsv.gz
+  gzip -d title.basics.tsv.gz
+  ```
+  You can stop after previewing the first few lines – you don’t need the entire dataset for the exercises.
+- Alternatively, Kaggle hosts a curated IMDB set; sign in and download the CSV version if you prefer a pre‑converted file.
+
+A row from the raw TSV looks like:
+```
+tt0000001	Carmencita	1894	0\N\N\N\N\N\N
+```
+Columns are separated by tabs, so you can either replace `\t` with commas or let Python’s `csv` module handle the delimiter.
+
+**Reading it in Python:**
+You can use the same pattern shown earlier with a real file.  Here’s a simple snippet using the standard library:
+
+```python
+import csv
+
+with open('title.basics.tsv', encoding='utf-8') as f:
+    reader = csv.reader(f, delimiter='\t')
+    for row in reader:
+        # the title is usually the third column (index 2)
+        print(row[2])
+        break
+```
+
+This will print the first movie title in the file.  For the module’s exercises consider editing the first few lines into a new file named `imdb_sample.csv` or `imdb_sample.tsv` and work with that smaller copy.
+
 ---
 
 ## 1.5 Exercises
