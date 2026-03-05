@@ -17,23 +17,8 @@ This guide is written for absolute beginners—whether you're completely new to 
 
 ## 🧩 Module Overview
 
-### ✅ Progress Tracker
-- [x] [Module 0 – Setup & Tools 🛠️](modules/module0.md)
-- [x] [Module 1 – Computer Science Fundamentals 💻](modules/module1.md)
-- [ ] [Module 2a – Python Basics 🐍](modules/module2a.md)
-- [ ] [Module 2b – Python for Data 💾](modules/module2b.md)
-- [ ] [Module 3 – Data Handling & Visualization 📊](modules/module3.md)
-- [ ] [Module 4 – Math Foundations 📐](modules/module4.md)
-- [ ] [Module 5 – Introduction to Machine Learning 🤖](modules/module5.md)
-- [ ] [Module 6 – Deep Learning Basics 🧠](modules/module6.md)
-- [ ] [Module 7 – Advanced Topics & Best Practices 🚀](modules/module7.md)
-- [ ] [Module 8 – Senior Machine Learning & Research 🧩](modules/module8.md)
-
----
 
 ### [Module 0 – Setup & Tools 🛠️](modules/module0.md)
-**Estimated time:** 1–2 days
-
 **What you’ll learn:**
 - Installing Python 3 & package manager (pip)
 - Choosing and configuring an IDE/text editor (VS Code recommended)
@@ -51,7 +36,6 @@ This guide is written for absolute beginners—whether you're completely new to 
 ---
 
 ### [Module 1 – Computer Science Fundamentals 💻](modules/module1.md)
-**Estimated time:** 1–2 weeks
 
 **What you’ll learn:**
 - What a computer actually does (binary, CPU, memory)
@@ -69,7 +53,6 @@ This guide is written for absolute beginners—whether you're completely new to 
 ---
 
 ### [Module 2a – Python Basics 🐍](modules/module2a.md)
-**Estimated time:** 1–2 weeks
 
 **What you’ll learn:**
 - Variables, expressions, and basic operators
@@ -87,7 +70,6 @@ This guide is written for absolute beginners—whether you're completely new to 
 ---
 
 ### [Module 2b – Python for Data 💾](modules/module2b.md)
-**Estimated time:** 1–2 weeks
 
 **What you’ll learn:**
 - Working with files, reading/writing CSV and TSV
@@ -105,8 +87,6 @@ This guide is written for absolute beginners—whether you're completely new to 
 ---
 
 ### [Module 3 – Data Handling & Visualization 📊](modules/module3.md)
-**Estimated time:** 2–3 weeks
-
 **What you’ll learn:**
 - Data cleaning and preprocessing (missing values, normalization)
 - Feature engineering (extracting useful attributes from text, dates, etc.)
@@ -123,8 +103,6 @@ This guide is written for absolute beginners—whether you're completely new to 
 ---
 
 ### [Module 4 – Math Foundations 📐](modules/module4.md)
-**Estimated time:** 2–4 weeks
-
 **What you’ll learn:**
 - Linear algebra essentials (vectors, matrices, dot products)
 - Calculus basics (derivatives, gradients) with intuitive examples
@@ -141,8 +119,6 @@ This guide is written for absolute beginners—whether you're completely new to 
 ---
 
 ### [Module 5 – Introduction to Machine Learning 🤖](modules/module5.md)
-**Estimated time:** 3–4 weeks
-
 **What you’ll learn:**
 - Supervised vs unsupervised learning
 - Common algorithms: linear regression, decision trees, k-nearest neighbours
@@ -177,8 +153,6 @@ This guide is written for absolute beginners—whether you're completely new to 
 ---
 
 ### [Module 7 – Advanced Topics & Best Practices 🚀](modules/module7.md)
-**Estimated time:** 3–5 weeks
-
 **What you’ll learn:**
 - Natural language processing (NLP) techniques for classification and information retrieval
 - Model evaluation in depth: precision, recall, F1 score, ROC curves
