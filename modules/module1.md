@@ -4,6 +4,12 @@
 >
 > — Adapted from a famous quote by Donald Knuth
 
+**Estimated time:** 1–2 weeks
+
+**Resources:**
+- "Automate the Boring Stuff with Python" (ch.1)
+- Khan Academy intro to computing
+
 Welcome to the first chapter of your machine learning journey. This module serves as the foundation; without a solid grasp of these fundamentals, later topics will feel opaque. Think of this as a gentle introduction to the way computers think and to the basic tools you’ll use to instruct them.
 
 ---

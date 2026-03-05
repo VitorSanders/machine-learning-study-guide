@@ -2,6 +2,13 @@
 
 > "A good craftsman never blames his tools. But he does learn how to use them well."
 
+**Estimated time:** 1–2 days
+
+**Resources:**
+- Python installation guide (docs.python.org)
+- GitHub Hello World tutorial
+- VS Code documentation for Python
+
 This preliminary module prepares your environment so you're ready to write the code that will power the rest of the guide. Every bit of software and workflow introduced here will be used continuously throughout the course.
 
 ---
