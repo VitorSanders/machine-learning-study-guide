@@ -5,7 +5,7 @@ import requests
 GDELT_API_URL = 'https://api.gdeltproject.org/api/v2/doc/doc'
 # GDELT requires OR clauses to be wrapped in parentheses
 DEFAULT_QUERY = '(shipping OR logistics OR maritime)'
-DEFAULT_MAX_RECORDS = 5
+DEFAULT_MAX_RECORDS = 250
 
 
 def build_gdelt_query_parameters(query=DEFAULT_QUERY, max_records=DEFAULT_MAX_RECORDS):
@@ -57,13 +57,13 @@ def extract_articles_from_gdelt_response(data):
 
 
 def print_news_articles(articles):
-    """Print up to 5 articles in a human-readable format."""
+    """Print all returned articles in a human-readable format."""
     if not articles:
         print('No articles found for query.')
         return
 
-    print('Latest 5 news articles from GDELT:')
-    for i, article in enumerate(articles[:5], start=1):
+    print(f'Latest {len(articles)} news articles from GDELT:')
+    for i, article in enumerate(articles, start=1):
         title = article.get('title', 'No title')
         url = article.get('url', 'No URL')
         date = article.get('seendate', article.get('date', 'Unknown date'))
