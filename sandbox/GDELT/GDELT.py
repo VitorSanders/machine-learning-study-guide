@@ -1,15 +1,16 @@
 import sys
 import time
+from datetime import datetime, timedelta
 import requests
 
 GDELT_API_URL = 'https://api.gdeltproject.org/api/v2/doc/doc'
-# GDELT requires OR clauses to be wrapped in parentheses
 DEFAULT_QUERY = '(shipping OR logistics OR maritime)'
 DEFAULT_MAX_RECORDS = 250
-DEFAULT_DAYS = 30
-# Use YYYYMMDDHHMMSS format for API filtering, e.g. 20260213000000
-DEFAULT_START_DATETIME = None  # set e.g. '20260310000000' for fixed range
-DEFAULT_END_DATETIME = None  # set e.g. '20260315000000' for fixed range
+DEFAULT_DAYS = 1
+
+# Set a fixed window; leave both None to use last DEFAULT_DAYS windows.
+DEFAULT_START_DATETIME = None  # e.g. '20260310000000'
+DEFAULT_END_DATETIME = None  # e.g. '20260315000000'
 
 
 def build_gdelt_query_parameters(query=DEFAULT_QUERY, max_records=DEFAULT_MAX_RECORDS, startdatetime=None, enddatetime=None):
@@ -84,22 +85,27 @@ def extract_articles_from_gdelt_response(data):
     return english_articles
 
 
-def print_news_articles(articles):
-    """Print all returned articles in a human-readable format."""
+def format_article_summary(article, index):
+    """Generate a human-readable line for one article."""
+    title = article.get('title', 'No title')
+    url = article.get('url', 'No URL')
+    date = article.get('seendate', article.get('date', 'Unknown date'))
+    return f"{index}. [{date}] {title}\n   {url}"
+
+
+def display_articles(articles):
+    """Print a list of articles in readable form."""
     if not articles:
         print('No articles found for query.')
         return
 
     print(f'Latest {len(articles)} news articles from GDELT:')
     for i, article in enumerate(articles, start=1):
-        title = article.get('title', 'No title')
-        url = article.get('url', 'No URL')
-        date = article.get('seendate', article.get('date', 'Unknown date'))
-        print(f"{i}. [{date}] {title}\n   {url}")
+        print(format_article_summary(article, i))
     print('\nDone.')
 
 
-def main():
+def run_gdelt_collection():
     if DEFAULT_START_DATETIME and DEFAULT_END_DATETIME:
         windows = [(DEFAULT_START_DATETIME, DEFAULT_END_DATETIME)]
     else:
@@ -129,7 +135,11 @@ def main():
         print(f'Retrieved {len(collected)} unique English articles from {DEFAULT_START_DATETIME} to {DEFAULT_END_DATETIME}.')
     else:
         print(f'Retrieved {len(collected)} unique English articles in the last {DEFAULT_DAYS} days.')
-    print_news_articles(collected)
+    display_articles(collected)
+
+
+def main():
+    run_gdelt_collection()
 
 
 if __name__ == '__main__':
