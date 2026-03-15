@@ -6,11 +6,14 @@ GDELT_API_URL = 'https://api.gdeltproject.org/api/v2/doc/doc'
 # GDELT requires OR clauses to be wrapped in parentheses
 DEFAULT_QUERY = '(shipping OR logistics OR maritime)'
 DEFAULT_MAX_RECORDS = 250
+# Use YYYYMMDDHHMMSS format for API filtering, e.g. 20260213T000000
+DEFAULT_START_DATETIME = None  # set to '20260315000000' or None for auto
+DEFAULT_END_DATETIME = None  # set to '20260414235959' or None for auto
 
 
-def build_gdelt_query_parameters(query=DEFAULT_QUERY, max_records=DEFAULT_MAX_RECORDS):
+def build_gdelt_query_parameters(query=DEFAULT_QUERY, max_records=DEFAULT_MAX_RECORDS, startdatetime=None, enddatetime=None):
     """Return API parameters for a shipping-market doclist GDELT query."""
-    return {
+    params = {
         'query': query,
         'mode': 'artlist',
         'maxrecords': max_records,
@@ -18,8 +21,29 @@ def build_gdelt_query_parameters(query=DEFAULT_QUERY, max_records=DEFAULT_MAX_RE
         'sort': 'DateDesc'
     }
 
+    if startdatetime is not None:
+        params['startdatetime'] = startdatetime
+    if enddatetime is not None:
+        params['enddatetime'] = enddatetime
 
-def fetch_gdelt_articles_with_retries(api_url, params, max_attempts=5, initial_backoff=1):
+    return params
+
+
+def build_last_n_day_windows(days=DEFAULT_DAYS, window_size=1):
+    """Generate (startdatetime,enddatetime) windows for the last N days."""
+    from datetime import datetime, timedelta
+
+    now = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+    windows = []
+    for i in range(days):
+        end = now - timedelta(days=i)
+        start = end - timedelta(days=window_size)
+        windows.append((start.strftime('%Y%m%d%H%M%S'), end.strftime('%Y%m%d%H%M%S')))
+
+    return list(reversed(windows))  # oldest first
+
+
+def fetch_gdelt_articles_with_retries(api_url, params, max_attempts=20, initial_backoff=1):
     """Fetch GDELT JSON data with retries and exponential backoff on 429 rate limits."""
     backoff = initial_backoff
     for attempt in range(1, max_attempts + 1):
@@ -50,10 +74,13 @@ def fetch_gdelt_articles_with_retries(api_url, params, max_attempts=5, initial_b
 
 
 def extract_articles_from_gdelt_response(data):
-    """Extract article list from GDELT API response or return an empty list."""
+    """Extract article list from GDELT API response and return only English articles."""
     if not isinstance(data, dict):
         return []
-    return data.get('articles') or []
+
+    articles = data.get('articles') or []
+    english_articles = [a for a in articles if (a.get('language') or '').strip().lower() == 'english']
+    return english_articles
 
 
 def print_news_articles(articles):
@@ -72,15 +99,33 @@ def print_news_articles(articles):
 
 
 def main():
-    params = build_gdelt_query_parameters()
-    try:
-        data = fetch_gdelt_articles_with_retries(GDELT_API_URL, params)
-    except RuntimeError as e:
-        print('Error:', e, file=sys.stderr)
-        sys.exit(1)
+    if DEFAULT_START_DATETIME and DEFAULT_END_DATETIME:
+        windows = [(DEFAULT_START_DATETIME, DEFAULT_END_DATETIME)]
+    else:
+        windows = build_last_n_day_windows(days=DEFAULT_DAYS)
 
-    articles = extract_articles_from_gdelt_response(data)
-    print_news_articles(articles)
+    collected = []
+    seen_urls = set()
+
+    for startdatetime, enddatetime in windows:
+        params = build_gdelt_query_parameters(startdatetime=startdatetime, enddatetime=enddatetime)
+        try:
+            data = fetch_gdelt_articles_with_retries(GDELT_API_URL, params)
+        except RuntimeError as e:
+            print(f'Warning: window {startdatetime}-{enddatetime} failed: {e}', file=sys.stderr)
+            continue
+
+        articles = extract_articles_from_gdelt_response(data)
+
+        for article in articles:
+            url = article.get('url')
+            if not url or url in seen_urls:
+                continue
+            seen_urls.add(url)
+            collected.append(article)
+
+    print(f'Retrieved {len(collected)} unique English articles in the last {DEFAULT_DAYS} days.')
+    print_news_articles(collected)
 
 
 if __name__ == '__main__':
