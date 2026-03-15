@@ -4,9 +4,9 @@ from datetime import datetime, timedelta
 import requests
 
 GDELT_API_URL = 'https://api.gdeltproject.org/api/v2/doc/doc'
-DEFAULT_QUERY = '(shipping OR logistics OR maritime)'
+DEFAULT_QUERY = '(shipping OR logistics OR maritime OR port OR vessel OR cargo OR market OR price OR supply OR demand OR disruption OR shortage OR surge OR war)'
 DEFAULT_MAX_RECORDS = 250
-DEFAULT_DAYS = 1
+DEFAULT_DAYS = 30
 
 # Set a fixed window; leave both None to use last DEFAULT_DAYS windows.
 DEFAULT_START_DATETIME = None  # e.g. '20260310000000'
