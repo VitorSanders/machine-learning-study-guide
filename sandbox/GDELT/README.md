@@ -16,7 +16,7 @@ This is a proof of concept (POC) project that demonstrates how to use the GDELT 
   - `build_gdelt_query_parameters()`
   - `fetch_gdelt_articles_with_retries()`
   - `extract_articles_from_gdelt_response()`
-  - `print_brazil_news_articles()`
+  - `print_news_articles()`
   - `main()`
 - `README.md` - this document
 
@@ -47,7 +47,7 @@ Run the script:
 python GDELT.py
 ```
 
-Output is the latest 5 Brazil news articles according to GDELT.
+Output is the latest 5 shipping/logistics-related news articles from worldwide sources according to GDELT.
 
 ## 💡 Notes
 

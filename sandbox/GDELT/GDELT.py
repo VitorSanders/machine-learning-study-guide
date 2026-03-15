@@ -3,12 +3,13 @@ import time
 import requests
 
 GDELT_API_URL = 'https://api.gdeltproject.org/api/v2/doc/doc'
-DEFAULT_QUERY = 'brazil'
+# GDELT requires OR clauses to be wrapped in parentheses
+DEFAULT_QUERY = '(shipping OR logistics OR maritime)'
 DEFAULT_MAX_RECORDS = 5
 
 
 def build_gdelt_query_parameters(query=DEFAULT_QUERY, max_records=DEFAULT_MAX_RECORDS):
-    """Return API parameters for a Brazil doclist GDELT query."""
+    """Return API parameters for a shipping-market doclist GDELT query."""
     return {
         'query': query,
         'mode': 'artlist',
@@ -25,7 +26,16 @@ def fetch_gdelt_articles_with_retries(api_url, params, max_attempts=5, initial_b
         try:
             response = requests.get(api_url, params=params, timeout=15)
             response.raise_for_status()
-            return response.json()
+
+            if not response.text:
+                raise RuntimeError('GDELT response body is empty')
+
+            try:
+                return response.json()
+            except ValueError as e:
+                snippet = response.text[:500].replace('\n', ' ') if isinstance(response.text, str) else ''
+                raise RuntimeError(f'Invalid JSON from GDELT API (status {response.status_code}): {snippet}') from e
+
         except requests.exceptions.HTTPError as e:
             status = getattr(response, 'status_code', None)
             if status == 429 and attempt < max_attempts:
@@ -33,7 +43,7 @@ def fetch_gdelt_articles_with_retries(api_url, params, max_attempts=5, initial_b
                 time.sleep(backoff)
                 backoff *= 2
                 continue
-            raise RuntimeError(f'GDELT API error: {e}') from e
+            raise RuntimeError(f'GDELT API error: {e} (status {status})') from e
         except requests.RequestException as e:
             raise RuntimeError(f'Network error querying GDELT API: {e}') from e
     raise RuntimeError('Max retry attempts reached for GDELT API call.')
@@ -46,13 +56,13 @@ def extract_articles_from_gdelt_response(data):
     return data.get('articles') or []
 
 
-def print_brazil_news_articles(articles):
+def print_news_articles(articles):
     """Print up to 5 articles in a human-readable format."""
     if not articles:
-        print('No articles found for Brazil.')
+        print('No articles found for query.')
         return
 
-    print('Latest 5 Brazilian news articles from GDELT:')
+    print('Latest 5 news articles from GDELT:')
     for i, article in enumerate(articles[:5], start=1):
         title = article.get('title', 'No title')
         url = article.get('url', 'No URL')
@@ -70,7 +80,7 @@ def main():
         sys.exit(1)
 
     articles = extract_articles_from_gdelt_response(data)
-    print_brazil_news_articles(articles)
+    print_news_articles(articles)
 
 
 if __name__ == '__main__':
