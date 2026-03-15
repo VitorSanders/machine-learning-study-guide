@@ -105,6 +105,26 @@ def display_articles(articles):
     print('\nDone.')
 
 
+def save_articles_to_csv(articles, csv_path='GDELT_articles.csv'):
+    """Save article metadata to a CSV file, appending when file exists."""
+    import os
+    import csv
+
+    fieldnames = ['url', 'url_mobile', 'title', 'seendate', 'socialimage', 'domain', 'language', 'sourcecountry']
+    file_exists = os.path.exists(csv_path)
+
+    with open(csv_path, 'a', newline='', encoding='utf-8') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        if not file_exists:
+            writer.writeheader()
+
+        for article in articles:
+            row = {key: article.get(key, '') for key in fieldnames}
+            writer.writerow(row)
+
+    print(f'Saved {len(articles)} articles to {csv_path}')
+
+
 def run_gdelt_collection():
     if DEFAULT_START_DATETIME and DEFAULT_END_DATETIME:
         windows = [(DEFAULT_START_DATETIME, DEFAULT_END_DATETIME)]
@@ -135,7 +155,9 @@ def run_gdelt_collection():
         print(f'Retrieved {len(collected)} unique English articles from {DEFAULT_START_DATETIME} to {DEFAULT_END_DATETIME}.')
     else:
         print(f'Retrieved {len(collected)} unique English articles in the last {DEFAULT_DAYS} days.')
+
     display_articles(collected)
+    save_articles_to_csv(collected)
 
 
 def main():
