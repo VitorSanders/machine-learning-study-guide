@@ -6,9 +6,10 @@ GDELT_API_URL = 'https://api.gdeltproject.org/api/v2/doc/doc'
 # GDELT requires OR clauses to be wrapped in parentheses
 DEFAULT_QUERY = '(shipping OR logistics OR maritime)'
 DEFAULT_MAX_RECORDS = 250
-# Use YYYYMMDDHHMMSS format for API filtering, e.g. 20260213T000000
-DEFAULT_START_DATETIME = None  # set to '20260315000000' or None for auto
-DEFAULT_END_DATETIME = None  # set to '20260414235959' or None for auto
+DEFAULT_DAYS = 30
+# Use YYYYMMDDHHMMSS format for API filtering, e.g. 20260213000000
+DEFAULT_START_DATETIME = None  # set e.g. '20260310000000' for fixed range
+DEFAULT_END_DATETIME = None  # set e.g. '20260315000000' for fixed range
 
 
 def build_gdelt_query_parameters(query=DEFAULT_QUERY, max_records=DEFAULT_MAX_RECORDS, startdatetime=None, enddatetime=None):
@@ -124,7 +125,10 @@ def main():
             seen_urls.add(url)
             collected.append(article)
 
-    print(f'Retrieved {len(collected)} unique English articles in the last {DEFAULT_DAYS} days.')
+    if DEFAULT_START_DATETIME and DEFAULT_END_DATETIME:
+        print(f'Retrieved {len(collected)} unique English articles from {DEFAULT_START_DATETIME} to {DEFAULT_END_DATETIME}.')
+    else:
+        print(f'Retrieved {len(collected)} unique English articles in the last {DEFAULT_DAYS} days.')
     print_news_articles(collected)
 
 
